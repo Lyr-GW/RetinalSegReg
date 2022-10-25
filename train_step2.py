@@ -31,7 +31,7 @@ opt.smoothness_type = 'L1'
 opt.debug = False # if true, save results on training set every epoch
 opt.interval_test = 1000
 opt.interval_save_ckpt = 500
-opt.total_epoch = 5000
+opt.total_epoch = 500
 opt.save_im = True
 
 # opt.checkpoint_recovery = None

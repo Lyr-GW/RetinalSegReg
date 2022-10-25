@@ -22,7 +22,7 @@ def rand_3x4():
 
 ''' data '''
 gs = globalsetting()
-dataset_path = os.path.join(gs.data_path, 'Fundus Fluorescein Angiogram Photographs & Colour Fundus Images of Diabetic Patients')
+dataset_path = os.path.join(gs.data_path, 'FFAPCFIDP')
 csv_path = os.path.join(gs.proj_path, 'FFAPCFIDP_affine.csv')
 src_list, tgt_list, M_list, src_msk_list, tgt_msk_list, src_t_list, tgt_t_list, src_t_msk_list, tgt_t_msk_list = \
 	ReadFFAPCFIDP_2(dataset_path=dataset_path, csv_path=csv_path, width=768, mask_shrink=0)
