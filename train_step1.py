@@ -40,9 +40,9 @@ opt.checkpoint_recovery = None
 #                           'ckpt_500.pth.tar')
 
 opt.style_target = os.path.join(gs.data_path, 'HRF/manual1/12_h.tif')
-# opt.dataset_path = os.path.join(gs.data_path, 'FFAPCFIDP')
-opt.dataset_path = os.path.join(gs.data_path, 'HRF')
-# opt.csv_path = os.path.join(gs.proj_path, 'FFAPCFIDP_affine.csv')
+opt.dataset_path = os.path.join(gs.data_path, 'FFAPCFIDP')
+# opt.dataset_path = os.path.join(gs.data_path, 'HRF')
+opt.csv_path = os.path.join(gs.proj_path, 'FFAPCFIDP_affine.csv')
 
 model = RetSegReg(opt)
 model.Train()

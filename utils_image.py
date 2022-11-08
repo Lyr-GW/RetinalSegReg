@@ -68,8 +68,12 @@ def ReadFFAPCFIDP_2(dataset_path, csv_path, width=720, height=576, mask_shrink=0
 		tgt = cv2.imread(os.path.join(dataset_path, sp[1]))
 		tgt = FFAPCFIDP_Expand(tgt, width=width, height=height)
 		tgt_list.append(tgt)
+		#csv后6列排成2行3列矩阵，记作M
 		M = np.array([float(sp[_+2]) for _ in range(6)]).reshape((2,3))
+		#M 加上一行[0,0,1]
 		M_f = np.concatenate((M, [[0,0,1]]), axis=0)
+		#dot x.dot(y) 等价于 np.dot(x,y) 
+		#np.linalg.inv(A)  求A逆矩阵
 		M_new = Mt_f.dot(M_f.dot(np.linalg.inv(Mt_f)))
 		M = M_new[:2,:]
 		M_list.append(M)
@@ -86,13 +90,13 @@ def ReadFFAPCFIDP_2(dataset_path, csv_path, width=720, height=576, mask_shrink=0
 		tgt_t_list.append(tgt_t)
 		tgt_t_msk_list.append(cv2.warpAffine(mask.copy(), M_t[0:2], (src.shape[1], src.shape[0])))
 
-	# 	cv2.imshow('a', src)
-	# 	cv2.imshow('b', tgt)
-	# 	cv2.imshow('c', mask)
-	# 	cv2.imshow('d', src_t)
-	# 	cv2.imshow('e', tgt_t)
-	# 	cv2.imshow('f', src_t_msk_list[-1])
-	# 	cv2.imshow('g', tgt_t_msk_list[-1])
+	# 	cv2.imshow('src', src)
+	# 	cv2.imshow('tgt', tgt)
+	# 	cv2.imshow('mask', mask)
+	# 	cv2.imshow('src_t', src_t)
+	# 	cv2.imshow('tgt_t', tgt_t)
+	# 	cv2.imshow('src_t_msk_list[-1]', src_t_msk_list[-1])
+	# 	cv2.imshow('tgt_t_msk_list[-1]', tgt_t_msk_list[-1])
 	# 	cv2.waitKey()
 	# cv2.destroyAllWindows()
 	fp.close()
@@ -134,6 +138,10 @@ class FFAPCFIDP_icip():
 
 		self.src_train, self.tgt_train, self.src_train_msk, self.tgt_train_msk = SplitFFAPCFIDP(st=0)
 		self.src_test, self.tgt_test, self.src_test_msk, self.tgt_test_msk = SplitFFAPCFIDP(st=1)
+
+class HRF():
+	def __init__(self):
+		pass
 
 ''' augmentation '''
 

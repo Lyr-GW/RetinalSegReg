@@ -319,8 +319,11 @@ class RetSegReg():
 			else:
 				self.models[k].eval()
 
+	#训练函数
 	def Train(self):
 		t0 = time.time()
+		tnow = time.time()
+		tpast = time.time()
 
 		for self.epoch in range(self.epoch_st, self.opt.total_epoch):
 			train_loss_dict = {}
@@ -351,7 +354,9 @@ class RetSegReg():
 				if self.phase+'loss_'+k not in self.loss_all_dict:
 					self.loss_all_dict[self.phase+'loss_'+k] = []
 				self.loss_all_dict[self.phase + 'loss_' + k].append(v)
-			print(self.epoch, '%.02f'%(time.time()-t0), ' sec', end=' -- ram ')
+			tnow = time.time()
+			print(self.epoch, 'Total time:%.02fsec'%(tnow-t0), '||Epoch time:%.02fsec'%(tnow-tpast), end=' -- ram ')
+			tpast = tnow
 			resident_size = self.process.memory_info().rss
 			rss_g = resident_size //(1024**3)
 			rss_m = (resident_size % (1024**3)) //(1024**2)
