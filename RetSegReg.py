@@ -239,10 +239,21 @@ class RetSegReg():
 		feat_f_2 = self.models['seg_feat_'+modal](features_2)
 		seg_2 = self.models['seg_pred'](feat_f_2)
 		if self.opt.rot_inv_type.startswith('rot'):
+			# print("rot")
 			seg_2 = torch.flip(seg_2, dims=[2,3])
 			feat_f_2 = torch.flip(feat_f_2, dims=[2,3])
 
 		im_seg = ( seg_1 + seg_2 ) / 2 * self.tensors[modal+'_msk']
+
+		# seg_1 = np.squeeze(get(seg_1))
+		# seg_2 = np.squeeze(get(seg_2))
+		# im_seg = np.squeeze(get(im_seg))
+		# cv2.imshow('seg_1', seg_1)
+		# cv2.imshow('seg_2', seg_2)
+		# cv2.imshow('im_seg', im_seg)
+		# cv2.waitKey()
+		# cv2.destroyAllWindows()
+
 		feat_f_c = (feat_f_1+feat_f_2) / 2
 		return im_seg, feat_f_c, seg_1, seg_2
 
