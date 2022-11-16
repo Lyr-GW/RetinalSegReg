@@ -38,9 +38,9 @@ opt.total_epoch = 500
 opt.save_im = True
 
 # 测试代码 跑5 epochs
-# opt.interval_test = 5 
-# opt.interval_save_ckpt = 1 
-# opt.total_epoch = 5 
+# opt.interval_test = 10 
+# opt.interval_save_ckpt = 5 
+# opt.total_epoch = 10 
 # opt.save_im = True
 
 opt.checkpoint_recovery = None

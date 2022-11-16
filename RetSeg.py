@@ -275,10 +275,11 @@ class RetSeg():
 		self.losses['total'] = (self.losses['style_gram_src'] + self.losses['style_gram_tgt']) * 1 + \
 		                       (self.losses['cmp_self_src'] + self.losses['cmp_self_tgt']) * 1e-3 
 
+		#ssim损失
 		if self.opt.ssim > 0:
 			self.losses['ssim'] = 1 - self.loss_funcs['ssim'](self.tensors['src_seg'] * self.tensors['src_msk'] * self.tensors['tgt_msk'],
 						                                      self.tensors['tgt_seg'] *  self.tensors['src_msk'] * self.tensors['tgt_msk'])
-			self.losses['total'] += self.losses['ssim']
+			self.losses['total'] += self.losses['ssim'] * self.opt.ssim
 		'''以下为配准部分使用loss函数'''
 
 	def SetStatus(self, status='train'):
