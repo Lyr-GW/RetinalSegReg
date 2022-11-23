@@ -3,7 +3,8 @@ import numpy as np
 import os
 
 # from RetSegReg import options, RetSegReg
-from RetSeg import options, RetSeg
+# from RetSeg import options, RetSeg
+from RetSegDDR import options, RetSegDDR
 from globalsetting import globalsetting
 
 torch.manual_seed(2018)
@@ -32,16 +33,16 @@ opt.smoothness_type = 'L1'
 opt.debug = False # if true, save results on training set every epoch
 
 #训练
-opt.interval_test = 500 
-opt.interval_save_ckpt = 100
-opt.total_epoch = 500
-opt.save_im = True
+# opt.interval_test = 500 
+# opt.interval_save_ckpt = 100
+# opt.total_epoch = 500
+# opt.save_im = True
 
 # 测试代码 跑5 epochs
-# opt.interval_test = 10 
-# opt.interval_save_ckpt = 5 
-# opt.total_epoch = 10 
-# opt.save_im = True
+opt.interval_test = 50 
+opt.interval_save_ckpt = 10 
+opt.total_epoch = 50
+opt.save_im = True
 
 opt.checkpoint_recovery = None
 # opt.checkpoint_recovery = os.path.join(gs.proj_path, 'ckpt/'
@@ -49,10 +50,11 @@ opt.checkpoint_recovery = None
 #                           'ckpt_500.pth.tar')
 
 opt.style_target = os.path.join(gs.data_path, 'HRF/manual1/12_h.tif')
-opt.dataset_path = os.path.join(gs.data_path, 'FFAPCFIDP')
+# opt.dataset_path = os.path.join(gs.data_path, 'FFAPCFIDP')
+opt.dataset_path = os.path.join(gs.data_path, 'DDR/lesion_segmentation')
 # opt.dataset_path = os.path.join(gs.data_path, 'HRF')
 opt.csv_path = os.path.join(gs.proj_path, 'FFAPCFIDP_affine.csv')
 
 # model = RetSegReg(opt)
-model = RetSeg(opt)
+model = RetSegDDR(opt)
 model.Train()

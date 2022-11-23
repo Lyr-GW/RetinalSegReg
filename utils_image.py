@@ -35,8 +35,10 @@ def ExpandSquare(im, fill=0):
 		imn = np.swapaxes(imn, 0, 1)
 	return imn
 
+# 产生mask使用
 def FFAPCFIDP_Expand(im, width=720, height=576):
 	ss = im.shape
+	# print(ss)
 	if height <= ss[0] and width <= ss[1]:
 		return im
 	if len(ss)==3:
@@ -47,6 +49,7 @@ def FFAPCFIDP_Expand(im, width=720, height=576):
 		nim[(height-ss[0])//2:(height-ss[0])//2+ss[0], (width-ss[1])//2:(width-ss[1])//2+ss[1]] = im
 	return nim
 
+#读入数据集
 def ReadFFAPCFIDP_2(dataset_path, csv_path, width=720, height=576, mask_shrink=0):
 	mask = np.zeros((576, 720), dtype=np.float32)
 	cv2.circle(mask, (720 // 2, 576 // 2), radius=720 // 2 - 1, color=1, thickness=-1)
@@ -142,6 +145,68 @@ class FFAPCFIDP_icip():
 class HRF():
 	def __init__(self):
 		pass
+
+def ReadDDR_2(dataset_path, width=720, height=576, mask_shrink=0):
+	mask = np.zeros((576, 720), dtype=np.float32)
+	cv2.circle(mask, (720 // 2, 576 // 2), radius=720 // 2 - 1, color=1, thickness=-1)
+	# mask = cv2.resize(ExpandSquare(mask), (768, 768)) == 1
+	# mask = mask.astype(np.float32)
+	# se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (21, 21))
+	# mask = cv2.erode(mask, se)
+	mask = FFAPCFIDP_Expand(mask, width=width, height=height)
+
+	src_list, src_msk_list = [], []
+	file_names = os.listdir(dataset_path)
+	for item in file_names:
+		# sp = line.split(',')
+		# print(os.path.join(dataset_path, item))
+		src = cv2.imread(os.path.join(dataset_path, item))
+		
+		# 调整src尺寸
+		src = cv2.resize(src, (720, 576))
+		src = FFAPCFIDP_Expand(src, width=width, height=height)
+		src_list.append(src)
+		#dot x.dot(y) 等价于 np.dot(x,y) 
+		#np.linalg.inv(A)  求A逆矩阵
+		src_msk_list.append(mask)
+
+
+		# cv2.imshow('src', src)
+		# cv2.imshow('tgt', tgt)
+		# cv2.imshow('mask', mask)
+		# cv2.imshow('src_t', src_t)
+		# cv2.imshow('tgt_t', tgt_t)
+		# cv2.imshow('src_t_msk_list[-1]', src_t_msk_list[-1])
+		# cv2.imshow('tgt_t_msk_list[-1]', tgt_t_msk_list[-1])
+		# cv2.waitKey()
+	# cv2.destroyAllWindows()
+
+	if mask_shrink > 0:
+		mask_shrink *= 2+1
+		se = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (mask_shrink, mask_shrink))
+		for i in range(len(src_msk_list)):
+			src_msk_list[i] = cv2.erode(src_msk_list[i], se, borderValue=0)
+
+
+	src_list = np.array(src_list).astype(np.float32) / 255.
+	src_msk_list = np.array(src_msk_list)
+
+	return src_list, src_msk_list 
+
+class DDR():
+	def __init__(self, dataset_path):
+		src_list, src_msk_list = ReadDDR_2(dataset_path=dataset_path, width=768, mask_shrink=0)
+
+		def SplitDDR(st=0):
+			# src_train = np.concatenate((src_list[st::2], src_t_list[st::2]), axis=0)
+			# src_train_msk = np.concatenate((src_msk_list[st::2], src_t_msk_list[st::2]), axis=0)
+			src_train = src_list[st::2]
+			src_train_msk = src_msk_list[st::2]
+			return src_train, src_train_msk
+
+		self.src_train, self.src_train_msk = SplitDDR(st=0)
+		self.src_test, self.src_test_msk = SplitDDR(st=1)
+
 
 ''' augmentation '''
 
